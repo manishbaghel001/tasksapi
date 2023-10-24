@@ -1,15 +1,9 @@
 const express = require('express');
 const app = express();
 
-const bucketList = require('./routes/bucketList');
-const dailyTasks = require('./routes/dailyTasks');
-const myTasks = require('./routes/myTasks');
-const stuff = require('./routes/stuff');
+const todos = require('./routes/todos');
 
-app.use('/api', bucketList);
-app.use('/api', dailyTasks);
-app.use('/api', myTasks);
-app.use('/api', stuff);
+app.use('/api', todos);
 
 const port = process.env.PORT || 3000;
 
