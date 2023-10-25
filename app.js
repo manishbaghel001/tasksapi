@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 
+const cors = require('cors');
+app.use(cors());
+
 const todos = require('./routes/todos');
 const create = require('./routes/create');
 
