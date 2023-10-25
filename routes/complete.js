@@ -5,7 +5,7 @@ const fs = require('fs');
 const router = express.Router();
 const path = require('path');
 const file = path.join(__dirname, './todos.json');
-const api = '/complete/';
+const api = '/';
 todos = require(file);
 router.use(bodyParser.json());
 
