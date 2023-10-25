@@ -29,11 +29,10 @@ router.post(api + ':taskId', (req, res) => {
 
 router.get(api + 'complete/' + ':taskId/' + ':id', (req, res) => {
     const taskId = String(req.params.taskId);
-    const id = String(req.params.id);
-
+    const id = Number(req.params.id);
     console.log(id, taskId);
 
-    const index = todos[taskId].incompleted.findIndex(item => item.id === id);
+    const index = todos[taskId]['incompleted'].findIndex(item => item.id === id);
     if (index !== -1) {
         const object = todos[taskId]['incompleted'][index];
         this.stuff['incompleted'].splice(index, 1);
