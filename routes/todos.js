@@ -12,12 +12,6 @@ router.use(bodyParser.json());
 
 router.use(cors());
 
-taskObj = {
-    taskLabel: "",
-    incompleted: [],
-    completed: []
-}
-
 router.get(api, (req, res) => {
     return res.json(todos)
 })
@@ -33,50 +27,28 @@ router.post(api + ':taskId', (req, res) => {
     })
 })
 
+router.get(api + '/complete/' + ':taskId/' + ':id', (req, res) => {
+    const taskId = String(req.params.taskId);
+    const id = String(req.params.id);
+
+    console.log(id, taskId);
+
+    const index = todos[taskId].incompleted.findIndex(item => item.id === id);
+    if (index !== -1) {
+        const object = todos[taskId]['incompleted'][index];
+        this.stuff['incompleted'].splice(index, 1);
+        this.stuff['completed'].push(object);
+    }
+
+    fs.writeFile(file, JSON.stringify(todos), (err, data) => {
+        return res.json({ status: "completed", completedData: todos[taskId]['incompleted'][index] })
+    })
+})
+
 router.get(api + ':taskId', (req, res) => {
     const taskId = String(req.params.taskId);
     return res.json(todos[taskId])
 })
-
-router.route(api + 'create/' + ':taskId')
-    .post((req, res) => {
-        const body = req.body
-        const taskId = String(req.params.taskId);
-        console.log(body, taskId);
-
-        taskObj['taskLabel'] = body['taskName']
-        console.log(body, taskId);
-        if (todos[taskId]) {
-            todos[taskId + '1'] = taskObj
-        } else
-            todos[taskId] = taskObj
-        fs.writeFile(file, JSON.stringify(todos), (err, data) => {
-            return res.json({ status: "added", addedData: taskObj })
-        })
-    })
-    .patch((req, res) => {
-        const taskId = String(req.params.taskId);
-
-        if (!todo) {
-            return res.status(404).json({ error: 'Object not found' });
-        }
-        todos[taskId]['taskLabel'] = req.body.taskName;
-        fs.writeFile(file, JSON.stringify(todos), (err, data) => {
-            return res.json({ status: "updated", updatedData: req.body })
-        })
-    })
-    .delete((req, res) => {
-        const taskId = String(req.params.taskId);
-
-        if (todoIndex === -1) {
-            return res.status(404).json({ error: 'Object not found' });
-        }
-        delete todos[taskId];
-
-        fs.writeFile(file, JSON.stringify(todos), (err, data) => {
-            return res.json({ status: "deleted" })
-        })
-    })
 
 router.route(api + ':taskId/' + ':id')
     .get((req, res) => {
