@@ -35,8 +35,8 @@ router.get(api + 'complete/' + ':taskId/' + ':id', (req, res) => {
     const index = todos[taskId]['incompleted'].findIndex(item => item.id === id);
     if (index !== -1) {
         const object = todos[taskId]['incompleted'][index];
-        this.stuff['incompleted'].splice(index, 1);
-        this.stuff['completed'].push(object);
+        todos[taskId]['incompleted'].splice(index, 1);
+        todos[taskId]['completed'].push(object);
     }
 
     fs.writeFile(file, JSON.stringify(todos), (err, data) => {
