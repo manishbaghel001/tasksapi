@@ -24,23 +24,6 @@ router.post(api + ':taskId', (req, res) => {
     })
 })
 
-router.get(api + 'complete/' + ':taskId/' + ':id', (req, res) => {
-    const taskId = String(req.params.taskId);
-    const id = Number(req.params.id);
-    console.log(id, taskId);
-
-    const index = todos[taskId]['incompleted'].findIndex(item => item.id === id);
-    if (index !== -1) {
-        const object = todos[taskId]['incompleted'][index];
-        todos[taskId]['incompleted'].splice(index, 1);
-        todos[taskId]['completed'].push(object);
-    }
-
-    fs.writeFile(file, JSON.stringify(todos), (err, data) => {
-        return res.json({ status: "completed", completedData: todos[taskId]['incompleted'][index] })
-    })
-})
-
 router.get(api + ':taskId', (req, res) => {
     const taskId = String(req.params.taskId);
     return res.json(todos[taskId])
