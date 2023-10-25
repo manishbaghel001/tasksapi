@@ -6,7 +6,7 @@ const cors = require('cors');
 const router = express.Router();
 const path = require('path');
 const file = path.join(__dirname, './todos.json');
-const api = '/todos/';
+const api = '/';
 todos = require(file);
 router.use(bodyParser.json());
 
@@ -27,7 +27,7 @@ router.post(api + ':taskId', (req, res) => {
     })
 })
 
-router.get(api + '/complete/' + ':taskId/' + ':id', (req, res) => {
+router.get(api + 'complete/' + ':taskId/' + ':id', (req, res) => {
     const taskId = String(req.params.taskId);
     const id = String(req.params.id);
 

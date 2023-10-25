@@ -4,8 +4,8 @@ const app = express();
 const todos = require('./routes/todos');
 const create = require('./routes/create');
 
-app.use('/api', todos);
-app.use('/api', create);
+app.use('/api/todos', todos);
+app.use('/api/create', create);
 
 const port = process.env.PORT || 3000;
 

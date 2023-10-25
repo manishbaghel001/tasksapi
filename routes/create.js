@@ -6,7 +6,7 @@ const cors = require('cors');
 const router = express.Router();
 const path = require('path');
 const file = path.join(__dirname, './todos.json');
-const api = '/todos/create/';
+const api = '/';
 todos = require(file);
 router.use(bodyParser.json());
 
