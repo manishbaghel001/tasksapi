@@ -7,6 +7,7 @@ const path = require('path');
 const file = path.join(__dirname, './todos.json');
 const api = '/';
 todos = require(file);
+
 router.use(bodyParser.json());
 
 router.get(api, (req, res) => {
@@ -17,8 +18,9 @@ router.post(api + ':taskId', (req, res) => {
     const body = req.body
     const taskId = String(req.params.taskId);
     console.log(body, taskId);
+    task = todos['tasks'].find((task) => task.taskId === taskId);
 
-    todos[taskId]['incompleted'].push({ ...body, id: todos[taskId]['incompleted'].length + 1 })
+    task['incompleted'].push({ ...body, id: task['incompleted'].length + 1 })
     fs.writeFile(file, JSON.stringify(todos), (err, data) => {
         return res.json({ status: "added", addedData: body })
     })
@@ -26,15 +28,18 @@ router.post(api + ':taskId', (req, res) => {
 
 router.get(api + ':taskId', (req, res) => {
     const taskId = String(req.params.taskId);
-    return res.json(todos[taskId])
+    task = todos['tasks'].find((task) => task.taskId === taskId);
+
+    return res.json(task)
 })
 
 router.route(api + ':taskId/' + ':id')
     .get((req, res) => {
         const id = Number(req.params.id);
         const taskId = String(req.params.taskId);
+        task = todos['tasks'].find((task) => task.taskId === taskId);
 
-        todo = todos[taskId]['incompleted'].find((todo) => todo.id === id);
+        todo = task['incompleted'].find((todo) => todo.id === id);
         console.log(todo, "klklkl");
         return res.json(todo)
     })
@@ -42,7 +47,8 @@ router.route(api + ':taskId/' + ':id')
         const id = Number(req.params.id);
         const taskId = String(req.params.taskId);
 
-        const todo = todos[taskId]['incompleted'].find((todo) => todo.id === id);
+        task = todos['tasks'].find((task) => task.taskId === taskId);
+        const todo = task['incompleted'].find((todo) => todo.id === id);
 
         if (!todo) {
             return res.status(404).json({ error: 'Object not found' });
@@ -55,13 +61,14 @@ router.route(api + ':taskId/' + ':id')
     .delete((req, res) => {
         const id = Number(req.params.id);
         const taskId = String(req.params.taskId);
+        task = todos['tasks'].find((task) => task.taskId === taskId);
 
-        const todoIndex = todos[taskId]['incompleted'].findIndex((todo) => todo.id === id);
+        const todoIndex = task['incompleted'].findIndex((todo) => todo.id === id);
 
         if (todoIndex === -1) {
             return res.status(404).json({ error: 'Object not found' });
         }
-        todos[taskId]['incompleted'].splice(todoIndex, 1);
+        task['incompleted'].splice(todoIndex, 1);
 
         fs.writeFile(file, JSON.stringify(todos), (err, data) => {
             return res.json({ status: "deleted" })
