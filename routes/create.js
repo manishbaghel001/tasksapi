@@ -41,10 +41,12 @@ router.route(api + ':taskId')
         const taskId = String(req.params.taskId);
         task = todos['tasks'].find((task) => task.taskId === taskId);
 
-        if (!todo) {
+        if (!task) {
             return res.status(404).json({ error: 'Object not found' });
         }
+        console.log(req.body.taskName, taskId)
         task['taskLabel'] = req.body.taskName;
+        task['taskId'] = req.body.taskName.replace(/ /g, "");;
         fs.writeFile(file, JSON.stringify(todos), (err, data) => {
             return res.json({ status: "updated", updatedData: req.body })
         })
