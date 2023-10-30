@@ -34,6 +34,11 @@ router.route(api + ':taskId')
             todos['tasks'].push(taskObj)
         }
         fs.writeFile(file, JSON.stringify(todos), (err, data) => {
+            taskObj = {
+                taskLabel: "",
+                incompleted: [],
+                completed: []
+            }
             return res.json({ status: "added", addedData: taskObj })
         })
     })
