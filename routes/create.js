@@ -4,9 +4,11 @@ const fs = require('fs');
 
 const router = express.Router();
 const path = require('path');
-const file = path.join(__dirname, './todos.json');
+const file = path.join(__dirname, '../data/todos.json');
+const binFile = path.join(__dirname, '../data/bin.json');
 const api = '/';
 todos = require(file);
+binTodos = require(binFile);
 
 router.use(bodyParser.json());
 
@@ -63,8 +65,16 @@ router.route(api + ':taskId')
         if (todoIndex === -1) {
             return res.status(404).json({ error: 'Object not found' });
         }
-        todos['tasks'].splice(todoIndex, 1);
+        binTodos['tasks'].push(todos['tasks'][todoIndex])
 
+        console.log(binTodos, "line 74 klklklkl");
+
+        fs.writeFile(file, JSON.stringify(binTodos), (err, data) => {
+            // return res.json({ status: "Added in bin" })
+        })
+
+        todos['tasks'].splice(todoIndex, 1);
+        console.log(todos, "line 70 klklklkl");
         fs.writeFile(file, JSON.stringify(todos), (err, data) => {
             return res.json({ status: "deleted" })
         })

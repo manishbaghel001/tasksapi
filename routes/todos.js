@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const router = express.Router();
 const path = require('path');
-const file = path.join(__dirname, './todos.json');
+const file = path.join(__dirname, '../data/todos.json');
 const api = '/';
 todos = require(file);
 

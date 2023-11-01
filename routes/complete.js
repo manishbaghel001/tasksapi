@@ -4,11 +4,18 @@ const fs = require('fs');
 
 const router = express.Router();
 const path = require('path');
-const file = path.join(__dirname, './todos.json');
+const file = path.join(__dirname, '../data/todos.json');
+const binFile = path.join(__dirname, '../data/bin.json');
 const api = '/';
 todos = require(file);
+binTodos = require(binFile);
 
 router.use(bodyParser.json());
+
+taskObj = {
+    taskLabel: "",
+    completed: []
+}
 
 router.route(api + ':taskId/' + ':id')
     .get((req, res) => {
@@ -37,13 +44,30 @@ router.route(api + ':taskId/' + ':id')
         task = todos['tasks'].find((task) => task.taskId === taskId);
 
         const todoIndex = task['completed'].findIndex((todo) => todo.id === id);
+        const binTodoIndex = binTodo['tasks'].findIndex((todo) => todo.taskId === taskId);
 
         if (todoIndex === -1) {
             return res.status(404).json({ error: 'Object not found' });
         }
-        task['completed'].splice(todoIndex, 1);
 
+        if (binTodoIndex === -1) {
+            taskObj['taskId'] = taskId;
+            taskObj['taskLabel'] = task['taskLabel'];
+            taskObj['completed'].push(task['completed'][todoIndex]);
+            binTodos['tasks'].push(taskObj)
+        }
+        else {
+            binTodos['tasks'][binTodoIndex]['completed'].push(task['completed'][todoIndex])
+        }
+        task['completed'].splice(todoIndex, 1);
         fs.writeFile(file, JSON.stringify(todos), (err, data) => {
+            // return res.json({ status: "deleted" })
+        })
+        fs.writeFile(file, JSON.stringify(binTodos), (err, data) => {
+            taskObj = {
+                taskLabel: "",
+                completed: []
+            }
             return res.json({ status: "deleted" })
         })
     })

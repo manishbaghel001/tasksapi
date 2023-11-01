@@ -4,21 +4,23 @@ const fs = require('fs');
 
 const router = express.Router();
 const path = require('path');
-const file = path.join(__dirname, './todos.json');
+const file = path.join(__dirname, '../data/mode.json');
 const api = '/';
-todos = require(file);
+mode = require(file);
 router.use(bodyParser.json());
 
-router.route(api + ':mode')
-    .patch((req, res) => {
-        const mode = String(req.params.mode);
-        console.log(mode);
-        if (todos['mode'])
-            todos['mode'] = mode
+router.get(api, (req, res) => {
+    return res.json(mode)
+})
 
-        fs.writeFile(file, JSON.stringify(todos), (err, data) => {
-            return res.json({ status: "mode changed", mode: mode })
-        })
+router.patch(api + ':mode', (req, res) => {
+    const modeInput = String(req.params.mode);
+    console.log(mode);
+    mode = modeInput
+
+    fs.writeFile(file, JSON.stringify(mode), (err, data) => {
+        return res.json({ status: "mode changed", mode: mode })
     })
+})
 
 module.exports = router;

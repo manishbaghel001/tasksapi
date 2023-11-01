@@ -8,11 +8,13 @@ const todos = require('./routes/todos');
 const create = require('./routes/create');
 const complete = require('./routes/complete');
 const mode = require('./routes/mode');
+const bin = require('./routes/bin');
 
 app.use('/api/todos', todos);
 app.use('/api/create', create);
 app.use('/api/complete', complete);
 app.use('/api/mode', mode);
+app.use('/api/bin', bin);
 
 const port = process.env.PORT || 3000;
 
