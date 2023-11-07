@@ -4,11 +4,11 @@ const fs = require('fs');
 
 const router = express.Router();
 const path = require('path');
-const file = path.join(__dirname, '../data/todos.json');
-const binFile = path.join(__dirname, '../data/bin.json');
+// const file = path.join(__dirname, '../data/todos.json');
+// const binFile = path.join(__dirname, '../data/bin.json');
 const api = '/';
-todos = require(file);
-binTodos = require(binFile);
+// todos = require(file);
+// binTodos = require(binFile);
 
 router.use(bodyParser.json());
 

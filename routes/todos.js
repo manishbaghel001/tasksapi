@@ -1,78 +1,101 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-
 const router = express.Router();
-const path = require('path');
-const file = path.join(__dirname, '../data/todos.json');
-const api = '/';
-todos = require(file);
+const Todos = require('../models/todos.js')
 
 router.use(bodyParser.json());
+const api = '/';
+const activityApi = '/activity/';
+const batchApi = '/batch/';
 
-router.get(api, (req, res) => {
-    return res.json(todos)
+router.use(express.urlencoded({ extended: false }));
+
+router.get(api, async (req, res) => {
+    try {
+        const todos = await Todos.find({});
+        return res.json(todos);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error retrieving tasks');
+    }
 })
 
-router.post(api + ':taskId', (req, res) => {
-    const body = req.body
-    const taskId = String(req.params.taskId);
-    console.log(body, taskId);
-    task = todos['tasks'].find((task) => task.taskId === taskId);
-
-    task['incompleted'].push({ ...body, id: task['incompleted'].length + 1 })
-    fs.writeFile(file, JSON.stringify(todos), (err, data) => {
-        return res.json({ status: "added", addedData: body })
-    })
-})
-
-router.get(api + ':taskId', (req, res) => {
-    const taskId = String(req.params.taskId);
-    task = todos['tasks'].find((task) => task.taskId === taskId);
-
-    return res.json(task)
-})
-
-router.route(api + ':taskId/' + ':id')
-    .get((req, res) => {
-        const id = Number(req.params.id);
-        const taskId = String(req.params.taskId);
-        task = todos['tasks'].find((task) => task.taskId === taskId);
-
-        todo = task['incompleted'].find((todo) => todo.id === id);
-        console.log(todo, "klklkl");
-        return res.json(todo)
-    })
-    .patch((req, res) => {
-        const id = Number(req.params.id);
-        const taskId = String(req.params.taskId);
-
-        task = todos['tasks'].find((task) => task.taskId === taskId);
-        const todo = task['incompleted'].find((todo) => todo.id === id);
-
-        if (!todo) {
-            return res.status(404).json({ error: 'Object not found' });
+router.route(batchApi + ':id')
+    .get(async (req, res) => {
+        const id = String(req.params.id);
+        try {
+            const tasks = await Todos.find({ taskId: id });
+            return res.json(tasks);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
         }
-        todo.name = req.body.name;
-        fs.writeFile(file, JSON.stringify(todos), (err, data) => {
-            return res.json({ status: "updated", updatedData: req.body })
-        })
     })
-    .delete((req, res) => {
-        const id = Number(req.params.id);
-        const taskId = String(req.params.taskId);
-        task = todos['tasks'].find((task) => task.taskId === taskId);
-
-        const todoIndex = task['incompleted'].findIndex((todo) => todo.id === id);
-
-        if (todoIndex === -1) {
-            return res.status(404).json({ error: 'Object not found' });
+    .post(async (req, res) => {
+        const body = req.body
+        const id = String(req.params.id);
+        try {
+            await Todos.create({
+                taskId: id,
+                todoName: body.todoName,
+                completed: false
+            })
+            return res.status(201).json({ status: "Success" })
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
         }
-        task['incompleted'].splice(todoIndex, 1);
+    })
 
-        fs.writeFile(file, JSON.stringify(todos), (err, data) => {
-            return res.json({ status: "deleted" })
-        })
+router.route(api + ':id')
+    .get(async (req, res) => {
+        const id = req.params.id;
+        try {
+            const tasks = await Todos.findById(id);
+            return res.json(tasks);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
+        }
+    })
+    .patch(async (req, res) => {
+        const id = req.params.id;
+        try {
+            await Todos.findByIdAndUpdate(id, { todoName: req.body.todoName });
+            return res.json({ status: 'Success' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
+        }
+    })
+    .delete(async (req, res) => {
+        const id = req.params.id;
+        try {
+            const binItem = await Todos.findById(id)
+            if (binItem.deleted == undefined || !binItem.deleted) {
+                await Todos.findByIdAndUpdate(id, { deleted: true });
+                return res.json({ status: 'Success' });
+            }
+            else if (binItem.deleted != undefined && binItem.deleted) {
+                await Todos.findByIdAndDelete(id);
+                return res.json({ status: 'Success' });
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
+        }
+    })
+
+router.route(activityApi + ':id')
+    .get(async (req, res) => {
+        const id = String(req.params.id);
+        try {
+            const tasks = await Todos.findByIdAndUpdate(id, { completed: true });
+            return res.json(tasks);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
+        }
     })
 
 module.exports = router;
