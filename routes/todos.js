@@ -14,7 +14,7 @@ const apiBatchBin = '/batch/bin/';
 
 router.get(api, async (req, res) => {
     try {
-        const todos = await Todos.find({}).bufferTimeoutMS(30000);;
+        const todos = await Todos.find({});
         return res.json(todos);
     } catch (err) {
         console.error(err);
