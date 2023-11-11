@@ -6,23 +6,22 @@ const { connectMongoDB } = require('./connections.js')
 const cors = require('cors');
 app.use(cors());
 
-connectMongoDB("mongodb://127.0.0.1:27017/tasks")
+const DB = "mongodb+srv://manish20171999:Manish%401234@tasks.u3s8du2.mongodb.net/tasks"
+const localDB = "mongodb://127.0.0.1:27017/tasks"
+
+connectMongoDB(DB)
     .then(() => console.log("Tasks MongoDB Connected"))
     .catch((err) => console.log("Tasks Mongo Error", err))
 
 
-const create = require('./routes/create');
+const tasks = require('./routes/tasks');
 const todos = require('./routes/todos');
-const complete = require('./routes/complete');
 const mode = require('./routes/mode');
-const bin = require('./routes/bin');
 
 app.use(logReqRes("./data/log.txt"))
-app.use('/api/create', create);
+app.use('/api/tasks', tasks);
 app.use('/api/todos', todos);
-// app.use('/api/complete', complete);
-// app.use('/api/mode', mode);
-// app.use('/api/bin', bin);
+app.use('/api/mode', mode);
 
 const port = process.env.PORT || 3000;
 

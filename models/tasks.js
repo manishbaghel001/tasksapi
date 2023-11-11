@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const createSchema = new mongoose.Schema({
+const tasksSchema = new mongoose.Schema({
     taskLabel: { type: String, required: true, unique: true },
     deleted: { type: Boolean }
 },
     { timestamps: true }
 );
 
-const Tasks = mongoose.model('tasks', createSchema);
+const Tasks = mongoose.model('tasks', tasksSchema);
 
 module.exports = Tasks 

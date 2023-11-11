@@ -1,11 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const Tasks = require('../models/tasks.js')
+
 const router = express.Router();
-const api = '/';
 router.use(bodyParser.json());
 router.use(express.urlencoded({ extended: false }));
 
-const Tasks = require('../models/todos.js')
+const api = '/';
+const apiBin = '/bin/';
 
 router.route(api)
     .get(async (req, res) => {
@@ -22,6 +24,7 @@ router.route(api)
         try {
             await Tasks.create({
                 taskLabel: body.taskLabel,
+                deleted: false
             })
             return res.status(201).json({ status: "Success" })
         } catch (err) {
@@ -58,15 +61,30 @@ router.route(api + ':id')
     .delete(async (req, res) => {
         const id = req.params.id;
         try {
-            const binItem = await Tasks.findById(id)
-            if (binItem.deleted == undefined || !binItem.deleted) {
-                await Tasks.findByIdAndUpdate(id, { deleted: true });
-                return res.json({ status: 'Success' });
-            }
-            else if (binItem.deleted != undefined && binItem.deleted) {
-                await Tasks.findByIdAndDelete(id);
-                return res.json({ status: 'Success' });
-            }
+            await Tasks.findByIdAndUpdate(id, { deleted: true });
+            return res.json({ status: 'Success' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
+        }
+    })
+
+router.route(apiBin + ':id')
+    .patch(async (req, res) => {
+        const id = req.params.id;
+        try {
+            await Tasks.findByIdAndUpdate(id, { deleted: false });
+            return res.json({ status: 'Success' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
+        }
+    })
+    .delete(async (req, res) => {
+        const id = req.params.id;
+        try {
+            await Tasks.findByIdAndDelete(id);
+            return res.json({ status: 'Success' });
         } catch (err) {
             console.error(err);
             res.status(500).send('Error retrieving tasks');
