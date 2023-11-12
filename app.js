@@ -10,6 +10,7 @@ app.use(cors());
 
 const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@tasks.u3s8du2.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
 // const DB = "mongodb://127.0.0.1:27017/tasks"
+console.log(DB, "klklklklkl");
 
 connectMongoDB(DB)
     .then(() => console.log("Tasks MongoDB Connected"))
