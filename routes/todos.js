@@ -12,6 +12,8 @@ const batchApi = '/batch/';
 const apiBin = '/bin/';
 const apiBatchBin = '/batch/bin/';
 
+
+
 router.get(api, async (req, res) => {
     try {
         const todos = await Todos.find({});
