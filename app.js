@@ -11,8 +11,9 @@ console.log(process.env.DB_USER, "klklkl");
 console.log(process.env.DB_PASS, "klklkl");
 
 console.log(process.env.DB_NAME, "klklkl");
-
-const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@tasks.u3s8du2.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
+const user = process.env.DB_USER
+console.log(user, "klklklklkl");
+const DB = `mongodb+srv://${user}:${process.env.DB_PASS}@tasks.u3s8du2.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
 // const DB = "mongodb://127.0.0.1:27017/tasks"
 console.log(DB, "klklklklkl");
 
