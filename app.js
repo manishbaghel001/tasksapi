@@ -1,14 +1,15 @@
+require("dotenv").config();
+
 const express = require('express');
-const app = express();
 const { logReqRes } = require('./middleware')
 const { connectMongoDB } = require('./connections.js')
 
 const cors = require('cors');
+const app = express();
 app.use(cors());
 
-//const DB = "mongodb+srv://manish20171999:Manish%401234@tasks.u3s8du2.mongodb.net/tasks"
-// const DB = "mongodb+srv://manish20171999:Manish%401234@tasks.u3s8du2.mongodb.net/tasks?retryWrites=true&w=majority"
-const DB = "mongodb://127.0.0.1:27017/tasks"
+const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@tasks.u3s8du2.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
+// const DB = "mongodb://127.0.0.1:27017/tasks"
 
 connectMongoDB(DB)
     .then(() => console.log("Tasks MongoDB Connected"))
