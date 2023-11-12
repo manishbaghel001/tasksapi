@@ -7,15 +7,9 @@ const { connectMongoDB } = require('./connections.js')
 const cors = require('cors');
 const app = express();
 app.use(cors());
-console.log(process.env.DB_USER, "klklkl");
-console.log(process.env.DB_PASS, "klklkl");
 
-console.log(process.env.DB_NAME, "klklkl");
-const user = process.env.DB_USER
-console.log(user, "klklklklkl  gh");
-const DB = `mongodb+srv://manishbaghel:${process.env.DB_PASS}@tasks.u3s8du2.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
+const DB = `mongodb+srv://${process.env.DB_PASS}:${process.env.DB_PASS}@tasks.u3s8du2.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
 // const DB = "mongodb://127.0.0.1:27017/tasks"
-console.log(DB, "klklklklkl");
 
 connectMongoDB(DB)
     .then(() => console.log("Tasks MongoDB Connected"))
