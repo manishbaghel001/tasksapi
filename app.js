@@ -20,8 +20,9 @@ connectMongoDB(DB)
 const tasks = require('./routes/tasks');
 const todos = require('./routes/todos');
 const mode = require('./routes/mode');
+const logs = require('./models/logs')
 
-app.use(logReqRes("./data/log.txt"))
+app.use(logReqRes(logs))
 app.use('/api/tasks', tasks);
 app.use('/api/todos', todos);
 app.use('/api/mode', mode);

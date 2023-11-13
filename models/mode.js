@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const modeSchema = new mongoose.Schema({
-    mode: { type: String, required: true }
+    mode: { type: String, required: true },
+    type: { type: String }
 },
     { timestamps: true }
 );
