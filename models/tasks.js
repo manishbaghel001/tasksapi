@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
 const tasksSchema = new mongoose.Schema({
-    taskLabel: { type: String, required: true, unique: true },
-    deleted: { type: Boolean }
+    uid: { type: String },
+    tasks: { type: Array },
+    todos: { type: Array },
+    mode: { type: String }
 },
     { timestamps: true }
 );

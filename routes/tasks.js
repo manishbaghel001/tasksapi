@@ -7,83 +7,68 @@ router.use(bodyParser.json());
 router.use(express.urlencoded({ extended: false }));
 
 const api = '/';
-const apiBin = '/bin/';
 
-router.route(api)
+router.get(api, async (req, res) => {
+    try {
+        const tasks = await Tasks.find({});
+        return res.json(tasks);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error retrieving tasks');
+    }
+})
+
+router.route(api + ':uid')
     .get(async (req, res) => {
+        const uid = String(req.params.uid);
         try {
-            const tasks = await Tasks.find({});
-            return res.json(tasks);
+            const task = await Tasks.find({ uid: uid });
+            if (task && task.length > 0) {
+                return res.json(task);
+            }
+            else {
+                await Tasks.create({
+                    uid: uid,
+                    mode: 'light',
+                    tasks: [],
+                    todos: []
+                })
+                return res.status(201).json({ status: "Success" })
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error retrieving tasks');
+        }
+    })
+    .delete(async (req, res) => {
+        const uid = String(req.params.uid);
+        try {
+            await Tasks.findOneAndDelete({ uid: uid });
+            return res.json({ status: 'Success' });
         } catch (err) {
             console.error(err);
             res.status(500).send('Error retrieving tasks');
         }
     })
     .post(async (req, res) => {
-        const body = req.body
+        const uid = String(req.params.uid);
+        const body = req.body;
         try {
-            await Tasks.create({
-                taskLabel: body.taskLabel,
-                deleted: false
-            })
-            return res.status(201).json({ status: "Success" })
-        } catch (err) {
-            console.error(err);
-            if (err.code == 11000) {
-                res.status(500).send('Task Label is duplicated.');
-            } else {
-                res.status(500).send('Error retrieving tasks');
-            }
-        }
-    })
-
-router.route(api + ':id')
-    .get(async (req, res) => {
-        const id = req.params.id;
-        try {
-            const tasks = await Tasks.findById(id);
-            return res.json(tasks);
+            await Tasks.updateOne({ uid: uid }, { $push: { tasks: body } });
+            return res.json({ status: 'Success' });
         } catch (err) {
             console.error(err);
             res.status(500).send('Error retrieving tasks');
         }
     })
     .patch(async (req, res) => {
-        const id = req.params.id;
+        const uid = String(req.params.uid);
+        const body = req.body;
         try {
-            await Tasks.findByIdAndUpdate(id, { taskLabel: req.body.taskLabel });
-            return res.json({ status: 'Success' });
-        } catch (err) {
-            console.error(err);
-            res.status(500).send('Error retrieving tasks');
-        }
-    })
-    .delete(async (req, res) => {
-        const id = req.params.id;
-        try {
-            await Tasks.findByIdAndUpdate(id, { deleted: true });
-            return res.json({ status: 'Success' });
-        } catch (err) {
-            console.error(err);
-            res.status(500).send('Error retrieving tasks');
-        }
-    })
-
-router.route(apiBin + ':id')
-    .patch(async (req, res) => {
-        const id = req.params.id;
-        try {
-            await Tasks.findByIdAndUpdate(id, { deleted: false });
-            return res.json({ status: 'Success' });
-        } catch (err) {
-            console.error(err);
-            res.status(500).send('Error retrieving tasks');
-        }
-    })
-    .delete(async (req, res) => {
-        const id = req.params.id;
-        try {
-            await Tasks.findByIdAndDelete(id);
+            await Tasks.updateOne(
+                { uid: uid, "tasks.id": body['id'] },
+                { $set: { "tasks.$": body } }
+            );
             return res.json({ status: 'Success' });
         } catch (err) {
             console.error(err);
@@ -92,3 +77,36 @@ router.route(apiBin + ':id')
     })
 
 module.exports = router;
+
+// [
+//     {
+//         "uid": "hjkhjkhkjfhsiuferuy3ir6239kgrku2egitydiediey",
+//         "mode": "dark",
+//         "tasks": [
+//             {
+//                 "name": "My List",
+//                 "id": "654d4a6daf5143308f031bed",
+//                 "deleted": false
+//             },
+//             {
+//                 "name": "Bucket list",
+//                 "id": "654d4a6daf5143408f031bed1",
+//                 "deleted": false
+//             }
+//         ],
+//         "todos": [
+//             {
+//                 "name": "Jumping",
+//                 "id": "654d4a6daf5143308f031bed",
+//                 "completed": false,
+//                 "deleted": false
+//             },
+//             {
+//                 "name": "Running",
+//                 "id": "654d4a6daf5143408f031bed1",
+//                 "completed": false,
+//                 "deleted": false
+//             }
+//         ]
+//     }
+// ]
