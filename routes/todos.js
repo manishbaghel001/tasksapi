@@ -25,7 +25,7 @@ router.route(api + ':uid')
         const body = req.body;
         try {
             await Todos.updateOne(
-                { uid: uid, "todos.name": body['name'] },
+                { uid: uid, "todos.id": body['id'] },
                 { $set: { "todos.$": body } }
             );
             return res.json({ status: 'Success' });
