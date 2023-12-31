@@ -29,6 +29,7 @@ router.route(api + ':uid')
             else {
                 await Tasks.create({
                     uid: uid,
+                    mainBoard: 'Main Board',
                     mode: 'light',
                     tasks: [],
                     todos: []
@@ -82,6 +83,7 @@ module.exports = router;
 //     {
 //         "uid": "hjkhjkhkjfhsiuferuy3ir6239kgrku2egitydiediey",
 //         "mode": "dark",
+//         "mainBoard": "Main Borad",
 //         "tasks": [
 //             {
 //                 "name": "My List",
