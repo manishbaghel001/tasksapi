@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const tasksSchema = new mongoose.Schema({
     uid: { type: String },
-    mainBoard: { type: Array },
+    mainBoard: { type: String },
     tasks: { type: Array },
     todos: { type: Array },
     mode: { type: String }
