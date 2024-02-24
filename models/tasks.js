@@ -5,7 +5,12 @@ const tasksSchema = new mongoose.Schema({
     mainBoard: { type: String },
     tasks: { type: Array },
     todos: { type: Array },
-    mode: { type: String }
+    mode: { type: String },
+    img:
+    {
+        data: Buffer,
+        contentType: String
+    }
 },
     { timestamps: true }
 );

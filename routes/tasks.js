@@ -5,6 +5,7 @@ const Tasks = require('../models/tasks.js')
 const router = express.Router();
 router.use(bodyParser.json());
 router.use(express.urlencoded({ extended: false }));
+router.use(express.json());
 
 const api = '/';
 
@@ -32,7 +33,11 @@ router.route(api + ':uid')
                     mainBoard: 'Main Board',
                     mode: 'light',
                     tasks: [],
-                    todos: []
+                    todos: [],
+                    img: {
+                        data: '',
+                        contentType: ''
+                    }
                 })
                 return res.status(201).json({ status: "Success" })
             }
