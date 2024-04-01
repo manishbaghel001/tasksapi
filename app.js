@@ -28,7 +28,7 @@ app.use('/api/todos', todos);
 app.use('/api/mode', mode);
 app.use('/api/image', image);
 
-const port = process.env.PORT || 3000;
+const port = 3200;
 
 app.listen(port, () => {
     console.log('Server listening on port ' + port);
