@@ -6,6 +6,7 @@ const tasksSchema = new mongoose.Schema({
     tasks: { type: Array },
     todos: { type: Array },
     mode: { type: String },
+    rememberMe: { type: String },
     img:
     {
         data: Buffer,

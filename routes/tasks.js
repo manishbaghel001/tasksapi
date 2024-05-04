@@ -34,6 +34,7 @@ router.route(api + ':uid')
                     mode: 'light',
                     tasks: [],
                     todos: [],
+                    rememberMe: "true",
                     img: {
                         data: '',
                         contentType: ''

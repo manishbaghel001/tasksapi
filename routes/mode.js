@@ -11,6 +11,7 @@ router.route(api + ':uid')
     .patch(async (req, res) => {
         const modeInput = req.body.mode;
         const boardInput = req.body.mainBoard;
+        const rememberInput = req.body.rememberMe;
         const uid = String(req.params.uid);
 
         try {
@@ -19,7 +20,10 @@ router.route(api + ':uid')
                 return res.json("Mode changed successfully");
             } else if (boardInput) {
                 await Mode.updateOne({ uid: uid }, { mainBoard: boardInput });
-                return res.json("Mode changed successfully");
+                return res.json("mainBoard changed successfully");
+            } else if (rememberInput) {
+                await Mode.updateOne({ uid: uid }, { rememberMe: rememberInput });
+                return res.json("rememberMe changed successfully");
             }
         } catch (err) {
             console.error(err);
