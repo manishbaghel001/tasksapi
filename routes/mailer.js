@@ -22,12 +22,9 @@ router.route(api)
         const { name, email, number, age } = req.body;
         const mailOptions = {
             from: name,
-            to: 'manish20171999@gmail.com',
+            to: 'manish20181998@gmail.com',
             subject: `${name} wants to connect with you.`,
-            text:
-                ` ${name} wants to connect with you.\n
-                requestor has shared you below details.\n
-            Name: ${name}\nEmail: ${email}\nNumber: ${number}\nAge: ${age}`
+            text: `${name} wants to connect with you.\nRequestor has shared you below details.\nName: ${name}\nEmail: ${email}\nPhone Number: ${number}\nAge: ${age}\n\nBest Regards`
         };
 
         try {
@@ -35,7 +32,7 @@ router.route(api)
                 if (error) {
                     return res.status(500).send(error.toString());
                 }
-                return res.status(200).send('Email sent: ' + info.response);
+                return res.status(200).send({ status: 'Email sent' });
             });
         } catch (err) {
             console.error(err);
