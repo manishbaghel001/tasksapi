@@ -20,6 +20,7 @@ const tasks = require('./routes/tasks');
 const todos = require('./routes/todos');
 const mode = require('./routes/mode');
 const image = require('./routes/image');
+const mailer = require('./routes/mailer');
 const logs = require('./models/logs')
 
 app.use(logReqRes(logs))
@@ -27,6 +28,7 @@ app.use('/api/tasks', tasks);
 app.use('/api/todos', todos);
 app.use('/api/mode', mode);
 app.use('/api/image', image);
+app.use('/api/mailer', mailer);
 
 const port = 3200;
 
